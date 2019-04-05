@@ -3,7 +3,8 @@
   <head>
     <title>Similar Doctors</title>
   </head>
-
+  
+  <!-- Prompts the user for permission to provide location -->
   <script>
     function getLocation() {
       if (navigator.geolocation) {
@@ -19,6 +20,7 @@
       }
   </script>
 
+  <!-- Retrieves user input and parses data for api link. Parses JSON data into readable javascript object -->
   <script>
     function loadDoc(str)
     {
@@ -62,7 +64,8 @@
       }
     }
   </script>
-
+  
+  <!-- Retrieves the doctor's name from JSON data -->
   <script>
     function createName(obj){
       var doctorNames = obj.data;
@@ -89,6 +92,7 @@
   }
   </script>
 
+  <!-- Retrieves doctor's bio if provided -->
   <script>
     function createDescrip(obj)
     {
@@ -110,6 +114,7 @@
     }
   </script>
 
+  <!-- Retrieves doctor's office location based on city -->
   <script>
     function createLoc(obj){
       var doctorNames = obj.data;
@@ -138,7 +143,6 @@
       }
   }
   </script>
-
 
   <!-- This is the top bar -->
   <link href="navbar.css" type="text/css" rel="stylesheet">
