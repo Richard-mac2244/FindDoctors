@@ -1,0 +1,41 @@
+.searchbar{
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top:0;
+  margin: auto;
+  text-align: center;
+  width: 50%;
+  font-family: "serif";
+}
+
+.searchbar input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border-radius: 6px;
+  border: 2px solid #DFDFDF;
+}
+
+.searchbar button {
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #FEAD20;
+  color:white;
+  font-size: 17px;
+  border-radius: 6px;
+  border: 1px solid #DFDFDF;
+  box-shadow: 0 9px #999;
+  cursor: pointer;
+  float:inherit;
+}
+
+.searchbar button:hover {
+  background: #D99010;
+}
+
+.searchbar button.active {
+  background-color: #3e8e41;
+  box-shadow: 1px 0.5px #D99010;
+  transform: translateY(0.5px);
+}

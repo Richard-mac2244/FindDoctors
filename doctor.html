@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Similar Doctors</title>
+  </head>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        document.getElementById("demo1").innerHTML = "Geolocation is not supported by this browser.";
+        document.getElementById("demo2").innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+    function showPosition(position) {
+      document.getElementById("demo1").innerHTML = position.coords.latitude;
+      document.getElementById("demo2").innerHTML = position.coords.longitude;
+      }
+  </script>
+
+  <script>
+    function loadDoc(str)
+    {
+      if(str.length == 0)
+      {
+        document.getElementById("doctor_names").innerHTML = "";
+        document.getElementById("doctor_loc").innerHTML = "";
+        document.getElementById("doctor_pictures").innerHTML = "";
+      }
+      else
+      {
+        var newStr = "";
+        if(str.indexOf(' ')>=0)
+        {
+          newStr = str.replace(/ /g, "%20");
+        }
+        else
+        {
+          newStr = str;
+        }
+
+        var doctorData = "";
+        if(document.getElementById("demo1").innerHTML === null)
+        {
+          doctorData = ("https://api.betterdoctor.com/2016-03-01/doctors?query=" + newStr + "&skip=0&limit=10&user_key=2a8a653c0fe30f30fb768d5eee922a3e");
+        }
+        else {
+          doctorData = ("https://api.betterdoctor.com/2016-03-01/doctors?query=" + newStr +"&user_location=" + document.getElementById("demo1").innerHTML+"%2C" +document.getElementById("demo2").innerHTML + "&sort=distance-asc&skip=0&limit=10&user_key=2a8a653c0fe30f30fb768d5eee922a3e");
+        }
+        var request = new XMLHttpRequest();
+        request.open('GET', doctorData);
+        request.responseType = 'text';
+        request.send();
+        request.onload=function(){
+          var data = request.response;
+          var doctors = JSON.parse(data);
+          createName(doctors);
+          createLoc(doctors);
+          createDescrip(doctors);
+        }
+      }
+    }
+  </script>
+
+  <script>
+    function createName(obj){
+      var doctorNames = obj.data;
+      var uids = new Map();
+      for(var i = 0 ; i < doctorNames.length; i++)
+      {
+        var myP = document.createElement('li');
+        var doctorNames = obj.data;
+        var firstName = doctorNames[i].profile.first_name;
+        var lastName = doctorNames[i].profile.last_name;
+        myP.textContent = firstName + " " + lastName;
+        var name = myP.textContent;
+        uids.set(name, doctorNames[i].uid);
+        document.getElementById("doctor_names").appendChild(myP).addEventListener("click", function()
+        {
+        var x = document.getElementById("doctor_pictures");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+          }
+        });
+      }
+  }
+  </script>
+
+  <script>
+    function createDescrip(obj)
+    {
+      var doctorNames = obj.data;
+      for(var i = 0; i < doctorNames.length; i++)
+      {
+        var myP = document.createElement('li');
+        if(doctorNames[i].profile.bio != undefined || doctorNames[j].profile.bio.length != 0)
+        {
+          var description = doctorNames[i].profile.bio;
+          myP.textContent = description;
+          document.getElementById("doctor_pictures").appendChild(myP);
+        }
+        else
+        {
+          document.getElementById("doctor_pictures").innerHTML = "None";
+        }
+      }
+    }
+  </script>
+
+  <script>
+    function createLoc(obj){
+      var doctorNames = obj.data;
+      for(var i = 0 ; i < doctorNames.length; i++)
+      {
+        href="doctorList.html";
+        var myP = document.createElement('li');
+        var doctorNames = obj.data;
+        var street = "";
+        if(doctorNames[i].practices === undefined || doctorNames[i].practices.length == 0)
+        {
+          street = "No location provided";
+        }
+        else
+        {
+          street = doctorNames[i].practices[0].location_slug;
+          street = street.replace(/-/g, " ");
+          newstreet = street.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1));
+          firstPart = newstreet[0].toUpperCase();
+          boofstreet = newstreet.slice(1);
+          boofstreet.push(",");
+          street = (boofstreet.concat(firstPart)).join(' ');
+        }
+        myP.textContent = street;
+        document.getElementById("doctor_loc").appendChild(myP);
+      }
+  }
+  </script>
+
+
+  <!-- This is the top bar -->
+  <link href="navbar.css" type="text/css" rel="stylesheet">
+  <div class="topnavbar">
+    <a class="active" href="doctor.html">Home</a>
+    <a href="doctorList.html">Search Doctors</a>
+  </div>
+
+  <!-- Title -->
+  <body class="title">
+    <h1>Find Doctors</h1>
+  </body>
+
+
+  <!-- This is the search bar -->
+  <link href="searchbar.css" rel="stylesheet">
+  <div class="searchbar">
+    <form action="">
+      <input type="text" placeholder="Enter a symptom!" name="doctorsname">
+      <button type="button" class="Submit" onclick="getLocation()">Location</button>
+      <button type="button" class="Submit" onclick="loadDoc(doctorsname.value)">Submit</button>
+    </form>
+  </div>
+  <p id="demo1"></p>
+  <p id="demo2"></p>
+
+  <link href="data.css" type="text/css" rel="stylesheet">
+  <body class="list">
+    <ul>
+      <li class="doctorName" id="doctor_names"></li>
+      <li class="doctorLoc"id="doctor_loc"></li>
+      <li class="doctorPicture" id="doctor_pictures"></li>
+    </ul>
+  </body>
+
+</html>
